@@ -183,7 +183,7 @@
                     return e('div', { className: 'figurine-row' },
                         row.map((figurine) => {
                             return e(React.Fragment, {},
-                                e(FigurineCheckbox, { description: figurine[1].description },
+                                e(FigurineCheckbox, { description: figurine[1].description, disabled: figurine[1].useInstead !== undefined },
                                     figurine[1].displayName,
                                 ),
                                 ' ',
