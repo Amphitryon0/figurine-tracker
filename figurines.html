@@ -4,8 +4,9 @@
     <title>Nintendo Gallery Checklist (The Wind Waker HD)</title>
     <style>
         .gallery-room { max-width: max-content; text-align: center; }
+        .figurine-row { margin-block: 16px; }
+        .figurine { display: inline-block; margin-block: unset; }
         .description { color: dimgray; }
-        .figurine { display: inline-block; }
     </style>
     <div id=react-root></div>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
@@ -214,10 +215,14 @@
         function FigurineCheckbox(props) {
             const { displayName, description, useInstead } = figurineInfo[props.name];
             const disabled = useInstead !== undefined;
+            const lookupName = useInstead ?? props.name;
+            const checked = props.currentCheckedValues[lookupName];
             
             return e('p', { className: 'figurine' },
                 e('label', {},
-                    e('input', { type: 'checkbox', disabled }),
+                    e('input', { type: 'checkbox', disabled, checked, onChange: () => {
+                        props.onChange(lookupName, !checked);
+                    } }),
                     ` ${displayName}`,
                     description && e('span', { className: 'description' }, 
                         ` (description)`,
@@ -230,10 +235,14 @@
         function GalleryRoom(props) {
             return e('fieldset', { className: 'gallery-room' },
                 e('legend', {}, props.name),
-                props.rows.map((row) => {
-                    return e('div', { className: 'figurine-row' },
-                        row.map((figurine) => e(React.Fragment, {},
-                            e(FigurineCheckbox, { name: figurine }),
+                props.rows.map((row, i) => {
+                    return e('div', { className: 'figurine-row', key: i },
+                        row.map((figurine) => e(React.Fragment, { key: figurine },
+                            e(FigurineCheckbox, {
+                                name: figurine,
+                                currentCheckedValues: props.currentCheckedValues,
+                                onChange: props.onChange,
+                            }),
                             ' ',
                         )),
                     );
@@ -244,12 +253,41 @@
         function Gallery(props) {
             return e(React.Fragment, {},
                 Object.keys(props.rooms).map((roomName) => {
-                    return e(GalleryRoom, { name: roomName, rows: props.rooms[roomName] });
+                    return e(GalleryRoom, {
+                        name: roomName,
+                        rows: props.rooms[roomName],
+                        currentCheckedValues: props.currentCheckedValues,
+                        onChange: props.onChange,
+                        key: roomName,
+                    });
                 }),
             );
         }
         
+        class Tracker extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { collectedFigurines: Object.keys(figurineInfo).reduce((o, name) => {
+                    return figurineInfo[name]['useInstead'] !== undefined ? o
+                    : { ...o, [name]: false}
+                }, {})};
+                this.updateCollected = this.updateCollected.bind(this);
+            }
+            
+            updateCollected(figurine, state) {
+                this.setState({ collectedFigurines: { ...this.state.collectedFigurines, [figurine]: state } });
+            }
+            
+            render() {
+                return e(Gallery, {
+                    rooms: gallery,
+                    currentCheckedValues: this.state.collectedFigurines,
+                    onChange: this.updateCollected,
+                });
+            }
+        }
+        
         const root = ReactDOM.createRoot(document.getElementById('react-root'));
-        root.render(e(Gallery, { rooms: gallery }));
+        root.render(e(Tracker, {}));
     </script>
 </html>
