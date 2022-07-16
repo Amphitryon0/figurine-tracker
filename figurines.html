@@ -9,6 +9,8 @@
         .description { color: dimgray; }
         
         .trip-list { list-style: none; padding-left: 0; }
+        
+        summary { cursor: pointer; user-select: none; }
     </style>
     <div id=react-root></div>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
@@ -340,16 +342,22 @@
             
             render() {
                 return e(React.Fragment, {},
-                    e(Gallery, {
-                        rooms: gallery,
-                        currentCheckedValues: this.state.collectedFigurines,
-                        onChange: this.updateCollected,
-                    }),
-                    e(Route, {
-                        trips: route,
-                        currentCheckedValues: this.state.collectedFigurines,
-                        onChange: this.updateCollected,
-                    }),
+                    e('details', { open: true },
+                        e('summary', {}, 'Nintendo Gallery'),
+                        e(Gallery, {
+                            rooms: gallery,
+                            currentCheckedValues: this.state.collectedFigurines,
+                            onChange: this.updateCollected,
+                        }),
+                    ),
+                    e('details', { open: true },
+                        e('summary', {}, 'Speedrun Route'),
+                        e(Route, {
+                            trips: route,
+                            currentCheckedValues: this.state.collectedFigurines,
+                            onChange: this.updateCollected,
+                        }),
+                    ),
                 );
             }
         }
