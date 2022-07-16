@@ -214,9 +214,14 @@
         
         function FigurineCheckbox(props) {
             const { displayName, description, useInstead } = figurineInfo[props.name];
-            const disabled = useInstead !== undefined;
+            // Implement final figurine logic here because I'm lazy.
+            const finalFigurine = props.name === 'king of red lions';
+            const disabled = finalFigurine || useInstead !== undefined;
             const lookupName = useInstead ?? props.name;
-            const checked = props.currentCheckedValues[lookupName];
+            const checked = !finalFigurine ? props.currentCheckedValues[lookupName]
+                : Object.keys(props.currentCheckedValues).every((figurine) => {
+                    return figurine === 'king of red lions' || props.currentCheckedValues[figurine];
+                });
             
             return e('p', { className: 'figurine' },
                 e('label', {},
@@ -268,7 +273,7 @@
             constructor(props) {
                 super(props);
                 this.state = { collectedFigurines: Object.keys(figurineInfo).reduce((o, name) => {
-                    return figurineInfo[name]['useInstead'] !== undefined ? o
+                    return figurineInfo[name]['useInstead'] ? o
                     : { ...o, [name]: false}
                 }, {})};
                 this.updateCollected = this.updateCollected.bind(this);
