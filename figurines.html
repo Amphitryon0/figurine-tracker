@@ -7,6 +7,8 @@
         .figurine-row { margin-block: 16px; }
         .figurine { display: inline-block; margin-block: unset; }
         .description { color: dimgray; }
+        
+        .trip-list { list-style: none; padding-left: 0; }
     </style>
     <div id=react-root></div>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
@@ -210,6 +212,35 @@
             ],
         };
         
+        const route = [
+            ['minenco', 'sam', 'pompie & vera', 'missy', 'mila\'s father',
+             'candy', 'kane', 'dampa', 'cannon', 'potova & joanna'],
+            ['mothula', 'kalle demos', 'komali', 'gohma', 'helmaroc king',
+             'tetra', 'phantom ganon', 'mighty darknut', 'puppet ganon',
+             'zephos & cyclos'],
+            ['maggie', 'mila', 'kreeb', 'bubble', 'armos', 'armos knight',
+             'gohdan', 'valoo', 'linda', 'zunari', 'rat', 'big octo'],
+            ['basht & bisht', 'namali', 'pashli', 'chieftain', 'skett & akoot',
+             'hoskit', 'baito', 'koboli', 'kogoli', 'medli', 'peahat',
+             'seagull'],
+            ['fairy', 'moblin', 'chuchu', 'redead', 'floor master', 'poe',
+             'stalfos', 'jalhalla', 'crab', 'willi', 'obli', 'makar'],
+            ['fishman', 'no shield darknut', 'darknut', 'wizzrobe',
+             'orange wizzrobe', 'bokoblin', 'molgera'],
+            ['grandma', 'abe', 'rose', 'zill', 'joel', 'keese', 'magtail',
+             'morth', 'orca', 'sturgeon', 'sue-belle', 'mesa'],
+            ['fado', 'laruto', 'jabun', 'great fairy', 'queen of fairies',
+             'ganondorf', 'king of hyrule', 'lenzo', 'ilari', 'anton',
+             'gossack', 'gillian'],
+            ['mrs. marie', 'maggie\'s father', 'doc bandam', 'kamo',
+             'garrickson', 'killer bees', 'salvatore', 'gummy', 'wild pig', 'tott',
+             'traveling merchants', 'old man ho ho'],
+            ['hollo', 'irch', 'olivio', 'salvage corp.', 'linder', 'kargaroc',
+             'elma', 'drona', 'rown', 'oakin', 'loot', 'aldo'],
+            ['tingle', 'david jr.', 'ankle', 'knuckle', 'gyorg', 'seahat',
+             'beedle', 'boko baba', 'octorok', 'deku tree', 'manny', 'carlov'],
+        ];
+        
         const e = React.createElement;
         
         function FigurineCheckbox(props) {
@@ -269,6 +300,30 @@
             );
         }
         
+        function SingleTripList(props) {
+            return e('ol', { className: 'trip-list' },
+                props.figurines.map((figurine, i) => e('li', { key: i },
+                    e(FigurineCheckbox, {
+                        name: figurine,
+                        currentCheckedValues: props.currentCheckedValues,
+                        onChange: props.onChange,
+                    }),
+                )),
+            );
+        }
+        
+        function Route(props) {
+            return e('ol', { className: 'route' },
+                props.trips.map((trip, i) => e('li', { key: i },
+                    e(SingleTripList, {
+                        figurines: trip,
+                        currentCheckedValues: props.currentCheckedValues,
+                        onChange: props.onChange,
+                    }),
+                )),
+            );
+        }
+        
         class Tracker extends React.Component {
             constructor(props) {
                 super(props);
@@ -284,11 +339,18 @@
             }
             
             render() {
-                return e(Gallery, {
-                    rooms: gallery,
-                    currentCheckedValues: this.state.collectedFigurines,
-                    onChange: this.updateCollected,
-                });
+                return e(React.Fragment, {},
+                    e(Gallery, {
+                        rooms: gallery,
+                        currentCheckedValues: this.state.collectedFigurines,
+                        onChange: this.updateCollected,
+                    }),
+                    e(Route, {
+                        trips: route,
+                        currentCheckedValues: this.state.collectedFigurines,
+                        onChange: this.updateCollected,
+                    }),
+                );
             }
         }
         
