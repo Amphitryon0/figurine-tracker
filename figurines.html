@@ -343,17 +343,17 @@
             render() {
                 return e(React.Fragment, {},
                     e('details', { open: true },
-                        e('summary', {}, 'Nintendo Gallery'),
-                        e(Gallery, {
-                            rooms: gallery,
+                        e('summary', {}, 'Speedrun Route'),
+                        e(Route, {
+                            trips: route,
                             currentCheckedValues: this.state.collectedFigurines,
                             onChange: this.updateCollected,
                         }),
                     ),
                     e('details', { open: true },
-                        e('summary', {}, 'Speedrun Route'),
-                        e(Route, {
-                            trips: route,
+                        e('summary', {}, 'Nintendo Gallery'),
+                        e(Gallery, {
+                            rooms: gallery,
                             currentCheckedValues: this.state.collectedFigurines,
                             onChange: this.updateCollected,
                         }),
