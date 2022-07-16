@@ -8,6 +8,8 @@
         .figurine { display: inline-block; margin-block: unset; }
         .description { color: dimgray; }
         
+        @counter-style trips { system: extends decimal; prefix: "Trip "; }
+        .route { list-style: trips; padding-left: 8ch; }
         .trip-list { list-style: none; padding-left: 0; }
         
         summary { cursor: pointer; user-select: none; }
