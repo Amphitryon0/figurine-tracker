@@ -248,7 +248,7 @@
         const e = React.createElement;
         
         function FigurineCheckbox(props) {
-            const { displayName, description, useInstead } = figurineInfo[props.name];
+            const { displayName, description, useInstead } = figurineInfo[props.name] ?? {};
             // Implement final figurine logic here because I'm lazy.
             const finalFigurine = props.name === 'king of red lions';
             const disabled = finalFigurine || useInstead !== undefined;
