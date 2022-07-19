@@ -328,6 +328,71 @@
             );
         }
         
+        function RouteTracker(props) {
+            // Get a list of any figurines that were probably accidentally
+            // missed.
+            const skippedFigurines = [];
+            // Some very rough heuristics will tell us where the user likely
+            // is in the route, and we will consider any figurines before that
+            // point to be missed. Specifically, if a figurine is collected,
+            // but least 3 of the preceding 4 figurines were not collected, it
+            // was just gotten early. The user is at the furthest collected
+            // figurine that was not just gotten early.
+            let currentRoutePositionFigurine;
+            const figurineSearchList = props.route.flat().reverse();
+            for (const [i, figurine] of figurineSearchList.entries()) {
+                if (!props.currentCheckedValues[figurine]) {
+                    continue;
+                }
+                // The slice will stop at the end of the array (the beginning
+                // of the route) if it gets there, which is what we want.
+                let precedingFigurines = figurineSearchList.slice(i+1, i+5);
+                let uncollectedPreceding = precedingFigurines.reduce((a, fig) => {
+                    return props.currentCheckedValues[fig] ? a : a+1;
+                }, 0);
+                // If the figurine is collected and wasn't collected early,
+                // then, since we are iterating in reverse order, it is the
+                // furthest one, so we stop here.
+                if (uncollectedPreceding < 3) {
+                    currentRoutePositionFigurine = figurine;
+                    break;
+                }
+            }
+            
+            // If this variable wasn't set, the user is at the very beginning
+            // of the route, so nothing can be missed.
+            if (currentRoutePositionFigurine) {
+                for (let figurine of props.route.flat()) {
+                    if (figurine === currentRoutePositionFigurine) {
+                        break;
+                    }
+                    if (!props.currentCheckedValues[figurine]) {
+                        skippedFigurines.push(figurine);
+                    }
+                }
+            }
+            
+            return e(React.Fragment, {},
+                e(Route, {
+                    trips: props.route,
+                    currentCheckedValues: props.currentCheckedValues,
+                    onChange: props.onChange,
+                }),
+                skippedFigurines.length > 0 && e('fieldset', { id: 'skipped-figurines' },
+                    e('legend', {}, 'Skipped Figurines'),
+                    e('ul', { className: 'trip-list' },
+                        skippedFigurines.map((figurine) => e('li', { key: figurine },
+                            e(FigurineCheckbox, {
+                                name: figurine,
+                                currentCheckedValues: props.currentCheckedValues,
+                                onChange: props.onChange,
+                            }),
+                        )),
+                    ),
+                ),
+            );
+        }
+        
         class Tracker extends React.Component {
             constructor(props) {
                 super(props);
@@ -346,8 +411,8 @@
                 return e(React.Fragment, {},
                     e('details', { open: true },
                         e('summary', {}, 'Speedrun Route'),
-                        e(Route, {
-                            trips: route,
+                        e(RouteTracker, {
+                            route: route,
                             currentCheckedValues: this.state.collectedFigurines,
                             onChange: this.updateCollected,
                         }),
