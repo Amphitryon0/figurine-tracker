@@ -12,6 +12,16 @@
         .route { list-style: trips; padding-left: 8ch; }
         .trip-list { list-style: none; padding-left: 0; }
         
+        /* If we can fit anything worthwhile while still leaving a couple
+           lines of the route visible, then lift it up into the viewport.
+           Otherwise, don't bother, but make sure this threshold is set very
+           reasonably.*/
+        #skipped-figurines { position: sticky; bottom: 0; top: 2em;
+                             max-height: min(100vh - 6em, 50vh); min-height: 2em;
+                             overflow-y: auto; background: white; margin-bottom: 1em; }
+        #skipped-figurines > legend { background: white; }
+        fieldset > .trip-list { margin-block: 0; }
+        
         summary { cursor: pointer; user-select: none; }
     </style>
     <div id=react-root></div>
