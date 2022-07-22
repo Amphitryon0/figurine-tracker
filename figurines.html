@@ -6,6 +6,7 @@
         .gallery-room { max-width: max-content; text-align: center; }
         .figurine-row { margin-block: 16px; }
         .figurine { display: inline-block; margin-block: unset; }
+        .figurine-img-container { display: inline-block; width: 80px; max-height: 80px; text-align: center; }
         .figurine img:not(.collected) { filter: opacity(50%); }
         .description { color: dimgray; }
         
@@ -17,8 +18,8 @@
            lines of the route visible, then lift it up into the viewport.
            Otherwise, don't bother, but make sure this threshold is set very
            reasonably.*/
-        #skipped-figurines { position: sticky; bottom: 0; top: 2em;
-                             max-height: min(100vh - 6em, 50vh); min-height: 2em;
+        #skipped-figurines { position: sticky; bottom: 0; top: max(80px, 2em);
+                             max-height: min(100vh - 6em, 50vh); min-height: max(80px, 2em);
                              overflow-y: auto; background: white; margin-bottom: 1em; }
         #skipped-figurines > legend { background: white; }
         fieldset > .trip-list { margin-block: 0; }
@@ -404,7 +405,9 @@
                                       .replaceAll(/ /g, '_');
             filename = filename ?? `${name}_Figurine_(TWW).png`;
             const resourceURL = `https://www.zeldadungeon.net/wiki/images/thumb/${id[0]}/${id}/${filename}/${thumbWidth}px-${filename}`;
-            return e('img', { className: props.collected ? 'collected' : undefined, src: resourceURL });
+            return e('span', { className: 'figurine-img-container' }, 
+                e('img', { className: props.collected ? 'collected' : undefined, src: resourceURL }),
+            );
         }
         
         function FigurineCheckbox(props) {
