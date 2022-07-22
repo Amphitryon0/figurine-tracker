@@ -6,6 +6,8 @@
         .gallery-room { max-width: max-content; text-align: center; }
         .figurine-row { margin-block: 16px; }
         .figurine { display: inline-block; margin-block: unset; }
+        .figurine-img-container { display: inline-block; width: 80px; max-height: 80px; text-align: center; }
+        .figurine img:not(.collected) { filter: opacity(50%); }
         .description { color: dimgray; }
         
         @counter-style trips { system: extends decimal; prefix: "Trip "; }
@@ -16,8 +18,8 @@
            lines of the route visible, then lift it up into the viewport.
            Otherwise, don't bother, but make sure this threshold is set very
            reasonably.*/
-        #skipped-figurines { position: sticky; bottom: 0; top: 2em;
-                             max-height: min(100vh - 6em, 50vh); min-height: 2em;
+        #skipped-figurines { position: sticky; bottom: 0; top: max(80px, 2em);
+                             max-height: min(100vh - 6em, 50vh); min-height: max(80px, 2em);
                              overflow-y: auto; background: white; margin-bottom: 1em; }
         #skipped-figurines > legend { background: white; }
         fieldset > .trip-list { margin-block: 0; }
@@ -165,6 +167,145 @@
             'knuckle': { displayName: 'Knuckle' },
         };
         
+        // Figurine images are sourced from zeldadungeon.net, so this info
+        // is used to retrieve them.
+        const images = {
+            'linder': { id: '74', thumbWidth: 65 },
+            'aldo': { id: 'b6', thumbWidth: 51 },
+            'oakin': { id: '19', thumbWidth: 34 },
+            'carlov': { id: 'dd', thumbWidth: 41 },
+            'manny': { id: 'e6', thumbWidth: 47 },
+            'drona': { id: '7f', thumbWidth: 70 },
+            'rown': { id: '40', thumbWidth: 67 },
+            'irch': { id: '43', thumbWidth: 48 },
+            'elma': { id: '0b', thumbWidth: 59 },
+            'hollo': { id: 'b8', thumbWidth: 80 },
+            'olivio': { id: '0e', thumbWidth: 61 },
+            'fado': { id: '04', thumbWidth: 80 },
+            'deku tree': { id: 'b7', thumbWidth: 54 },
+            'makar': { id: '4a', thumbWidth: 42 },
+            'hoskit': { id: '02', thumbWidth: 51 },
+            'quill': { id: '3b', thumbWidth: 31 },
+            'valoo': { id: 'ec', thumbWidth: 80 },
+            'zephos & cyclos': { id: '97', thumbWidth: 80 },
+            'baito': { id: '84', thumbWidth: 37 },
+            'chieftain': { id: 'be', thumbWidth: 38, name: 'Rito_Chieftain' },
+            'ilari': { id: 'ee', thumbWidth: 35 },
+            'koboli': { id: 'c7', thumbWidth: 51 },
+            'laruto': { id: 'ac', thumbWidth: 75 },
+            'komali': { id: '0d', thumbWidth: 75 },
+            'namali': { id: '9a', thumbWidth: 46 },
+            'skett & akoot': { id: '0b', thumbWidth: 74 },
+            'medli': { id: 'dd', thumbWidth: 51 },
+            'basht & bisht': { id: 'ff', thumbWidth: 80 },
+            'pashli': { id: 'c9', thumbWidth: 34 },
+            'obli': { id: '4c', thumbWidth: 38 },
+            'kogoli': { id: 'ec', thumbWidth: 35 },
+            'willi': { id: '62', thumbWidth: 37 },
+            'armos': { id: '38', thumbWidth: 73 },
+            'armos knight': { id: 'd2', thumbWidth: 48 },
+            'morth': { id: 'ed', thumbWidth: 80 },
+            'poe': { id: 'c4', thumbWidth: 80 },
+            'redead': { id: 'e4', thumbWidth: 48, name: 'ReDead' },
+            'gyorg': { id: 'de', thumbWidth: 80 },
+            'octorok': { id: '3d', thumbWidth: 80 },
+            'seahat': { id: '30', thumbWidth: 80 },
+            'kargaroc': { id: '20', thumbWidth: 80 },
+            'miniblin': { id: 'f1', thumbWidth: 80, filename: 'Miniblins.png' },
+            'chuchu': { id: '81', thumbWidth: 80, name: 'ChuChu' },
+            'peahat': { id: '8f', thumbWidth: 80 },
+            'rat': { id: '35', thumbWidth: 80 },
+            'boko baba': { id: '7c', thumbWidth: 80 },
+            'keese': { id: '69', thumbWidth: 80, name: 'Keese_&_Fire_Keese' },
+            'bokoblin': { id: '16', thumbWidth: 80 },
+            'bubble': { id: '15', thumbWidth: 73 },
+            'floor master': { id: '15', thumbWidth: 80, name: 'Floormaster' },
+            'magtail': { id: 'd1', thumbWidth: 80 },
+            'puppet ganon': { id: '3c', thumbWidth: 67 },
+            'molgera': { id: '84', thumbWidth: 79 },
+            'kalle demos': { id: '56', thumbWidth: 80 },
+            'gohma': { id: '31', thumbWidth: 80 },
+            'big octo': { id: 'e4', thumbWidth: 70 },
+            'stalfos': { id: '9f', thumbWidth: 56 },
+            'jalhalla': { id: 'ec', thumbWidth: 80 },
+            'ganondorf': { id: '39', thumbWidth: 59 },
+            'helmaroc king': { id: '0e', thumbWidth: 80 },
+            'mothula': { id: '64', thumbWidth: 79 },
+            'mighty darknut': { id: '14', thumbWidth: 80 },
+            'moblin': { id: '96', thumbWidth: 80 },
+            'phantom ganon': { id: '32', thumbWidth: 80 },
+            'orange wizzrobe': { id: '52', thumbWidth: 80, name: 'Red_Wizzrobe' },
+            'darknut': { id: 'c5', thumbWidth: 80, name: 'Shielded_Darknut' },
+            'wizzrobe': { id: 'c4', thumbWidth: 80 },
+            'no shield darknut': { id: 'ae', thumbWidth: 80, name: 'Darknut' },
+            'gohdan': { id: '5e', thumbWidth: 80 },
+            'sue-belle': { id: '38', thumbWidth: 25, name: 'Sue-Belle' },
+            'seagull': { id: '0e', thumbWidth: 80, name: 'Seagulls' },
+            'aryll': { id: '78', thumbWidth: 49 },
+            'grandma': { id: '61', thumbWidth: 52 },
+            'sturgeon': { id: '03', thumbWidth: 42 },
+            'wild pig': { id: '5f', thumbWidth: 80 },
+            'orca': { id: 'c2', thumbWidth: 80 },
+            'rose': { id: '7a', thumbWidth: 58 },
+            'jabun': { id: '1f', thumbWidth: 58 },
+            'abe': { id: '1d', thumbWidth: 30 },
+            'mesa': { id: '1b', thumbWidth: 42 },
+            'joel': { id: '76', thumbWidth: 80 },
+            'crab': { id: 'ae', thumbWidth: 80 },
+            'zill': { id: 'b5', thumbWidth: 47 },
+            'sam': { id: '30', thumbWidth: 37 },
+            'gillian': { id: 'f6', thumbWidth: 26 },
+            'gossack': { id: '82', thumbWidth: 55 },
+            'cannon': { id: 'c3', thumbWidth: 71 },
+            'doc bandam': { id: 'bb', thumbWidth: 42 },
+            'kamo': { id: 'cd', thumbWidth: 35 },
+            'gummy': { id: '93', thumbWidth: 51 },
+            'kane': { id: '15', thumbWidth: 45 },
+            'dampa': { id: 'a9', thumbWidth: 72 },
+            'candy': { id: '78', thumbWidth: 58 },
+            'linda': { id: 'c8', thumbWidth: 26 },
+            'maggie\'s father': { id: '43', thumbWidth: 68 },
+            'maggie': { id: '49', thumbWidth: 67 },
+            'mila': { id: '86', thumbWidth: 78 },
+            'mila\'s father': { id: 'f4', thumbWidth: 80 },
+            'killer bees': { id: 'c0', thumbWidth: 80 },
+            'mrs. marie': { id: '27', thumbWidth: 44, name: 'Mrs_Marie' },
+            'potova & joanna': { id: '9b', thumbWidth: 80, name: 'Joanna_&_Potova' },
+            'tott': { id: 'c6', thumbWidth: 54 },
+            'lenzo': { id: 'b4', thumbWidth: 53 },
+            'garrickson': { id: '7c', thumbWidth: 56 },
+            'zunari': { id: '85', thumbWidth: 80 },
+            'pompie & vera': { id: 'b7', thumbWidth: 78 },
+            'missy': { id: 'df', thumbWidth: 38 },
+            'kreeb': { id: '43', thumbWidth: 33 },
+            'minenco': { id: '6c', thumbWidth: 33 },
+            'anton': { id: '54', thumbWidth: 54 },
+            'fishman': { id: 'db', thumbWidth: 80 },
+            'king of hyrule': { id: 'ee', thumbWidth: 63, name: 'Daphnes_Nohansen_Hyrule' },
+            'king of red lions': { id: '93', thumbWidth: 69, name: 'Link_&_the_King_of_Red_Lions' },
+            'princess zelda': { id: '98', thumbWidth: 36 },
+            'salvage corp.': { id: '2f', thumbWidth: 80, name: 'Salvage_Corp' },
+            'tetra': { id: '02', thumbWidth: 31 },
+            'salvatore': { id: '1c', thumbWidth: 62 },
+            'gonzo': { id: '72', thumbWidth: 49 },
+            'old man ho ho': { id: 'b0', thumbWidth: 35 },
+            'loot': { id: '2c', thumbWidth: 55 },
+            'senza': { id: 'c1', thumbWidth: 63 },
+            'traveling merchants': { id: '91', thumbWidth: 80 },
+            'beedle': { id: '35', thumbWidth: 67 },
+            'nudge': { id: '5d', thumbWidth: 40 },
+            'queen of fairies': { id: 'b2', thumbWidth: 39, name: 'Queen_of_Fairies' },
+            'tingle': { id: '25', thumbWidth: 37 },
+            'zuko': { id: '26', thumbWidth: 44 },
+            'great fairy': { id: 'c7', thumbWidth: 69 },
+            'ankle': { id: '8c', thumbWidth: 42 },
+            'fairy': { id: 'a1', thumbWidth: 80 },
+            'niko': { id: '59', thumbWidth: 43 },
+            'david jr.': { id: 'b7', thumbWidth: 33, name: 'David_Jr' },
+            'mako': { id: '6e', thumbWidth: 64 },
+            'knuckle': { id: '3d', thumbWidth: 56 },
+        };
+        
         const gallery = {
             'Forest Haven': [
                 ['linder', 'aldo', 'oakin', 'carlov', 'manny'],
@@ -232,7 +373,7 @@
             ['mothula', 'kalle demos', 'komali', 'gohma', 'helmaroc king',
              'tetra', 'miniblin', 'phantom ganon', 'mighty darknut',
              'puppet ganon', 'zephos & cyclos'],
-            ['kreeb', 'maggie', 'mila', 'bubble', 'armos', 'armos knight',
+            ['maggie', 'mila', 'kreeb', 'bubble', 'armos', 'armos knight',
              'gohdan', 'valoo', 'linda', 'zunari', 'fairy', 'rat'],
             ['basht & bisht', 'namali', 'pashli', 'chieftain', 'skett & akoot',
              'hoskit', 'baito', 'koboli', 'kogoli', 'medli', 'peahat',
@@ -257,6 +398,18 @@
         
         const e = React.createElement;
         
+        function FigurineImage(props) {
+            let { id, thumbWidth, name, filename } = images[props.name];
+            // If not specified, we can just transform the name we use.
+            name = name ?? props.name?.replaceAll(/(?<=^| )\w/g, (letter) => letter.toUpperCase())
+                                      .replaceAll(/ /g, '_');
+            filename = filename ?? `${name}_Figurine_(TWW).png`;
+            const resourceURL = `https://www.zeldadungeon.net/wiki/images/thumb/${id[0]}/${id}/${filename}/${thumbWidth}px-${filename}`;
+            return e('span', { className: 'figurine-img-container' }, 
+                e('img', { className: props.collected ? 'collected' : undefined, src: resourceURL, alt: '' }),
+            );
+        }
+        
         function FigurineCheckbox(props) {
             const { displayName, description, useInstead } = figurineInfo[props.name] ?? {};
             // Implement final figurine logic here because I'm lazy.
@@ -273,6 +426,7 @@
                     e('input', { type: 'checkbox', disabled, checked, onChange: () => {
                         props.onChange(lookupName, !checked);
                     } }),
+                    e(FigurineImage, { name: props.name, collected: checked }),
                     ` ${displayName}`,
                     description && e('span', { className: 'description' }, 
                         ` (${description})`,
