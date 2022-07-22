@@ -406,7 +406,7 @@
             filename = filename ?? `${name}_Figurine_(TWW).png`;
             const resourceURL = `https://www.zeldadungeon.net/wiki/images/thumb/${id[0]}/${id}/${filename}/${thumbWidth}px-${filename}`;
             return e('span', { className: 'figurine-img-container' }, 
-                e('img', { className: props.collected ? 'collected' : undefined, src: resourceURL }),
+                e('img', { className: props.collected ? 'collected' : undefined, src: resourceURL, alt: '' }),
             );
         }
         
