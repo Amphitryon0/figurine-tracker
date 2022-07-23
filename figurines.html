@@ -3,11 +3,13 @@
     <meta charset="utf-8">
     <title>Nintendo Gallery Checklist (The Wind Waker HD)</title>
     <style>
+        html { --background: white; background: var(--background); }
+        
         .gallery-room { max-width: max-content; text-align: center; }
         .figurine-row { margin-block: 16px; }
         .figurine { display: inline-block; margin-block: unset; }
         .figurine-img-container { display: inline-block; width: 80px; max-height: 80px; text-align: center; }
-        .figurine img:not(.collected) { filter: opacity(50%); }
+        .figurine img:not(.collected) { filter: opacity(50%) grayscale(50%); }
         .description { color: dimgray; }
         
         @counter-style trips { system: extends decimal; prefix: "Trip "; }
@@ -19,12 +21,19 @@
            Otherwise, don't bother, but make sure this threshold is set very
            reasonably.*/
         #skipped-figurines { position: sticky; bottom: 0; top: max(80px, 2em);
-                             max-height: min(100vh - 6em, 50vh); min-height: max(80px, 2em);
-                             overflow-y: auto; background: white; margin-bottom: 1em; }
-        #skipped-figurines > legend { background: white; }
+                             max-height: min(100vh - 6em, 50vh);
+                             min-height: max(80px, 2em); overflow-y: auto;
+                             background: var(--background); margin-bottom: 1em; }
+        #skipped-figurines > legend { background: var(--background); }
         fieldset > .trip-list { margin-block: 0; }
         
         summary { cursor: pointer; user-select: none; }
+        
+        @media (prefers-color-scheme: dark) {
+            html { --background: #333; color: white; }
+            input[type=checkbox] { filter: invert(20%); }
+            .description { color: darkgray; }
+        }
     </style>
     <div id=react-root></div>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
