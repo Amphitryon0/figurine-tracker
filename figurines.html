@@ -383,27 +383,27 @@
             ['mothula', 'kalle demos', 'komali', 'gohma', 'tetra', 'miniblin',
              'phantom ganon', 'mighty darknut', 'puppet ganon',
              'helmaroc king', 'zephos & cyclos', 'carlov'],
-            ['maggie', 'mila', 'kreeb', 'bubble', 'armos', 'armos knight',
-             'gohdan', 'linda', 'zunari', 'rat', 'big octo'],
+            ['maggie', 'mila', 'kreeb', 'armos', 'armos knight', 'gohdan',
+             'keese', 'linda', 'zunari', 'doc bandam', 'rat', 'big octo'],
             ['basht & bisht', 'namali', 'valoo', 'pashli', 'chieftain',
              'skett & akoot', 'hoskit', 'baito', 'koboli', 'kogoli', 'medli',
              'fairy'],
-            ['moblin', 'chuchu', 'redead', 'floor master', 'poe',
+            ['moblin', 'chuchu', 'bubble', 'redead', 'floor master', 'poe',
              'stalfos', 'jalhalla', 'crab', 'willi', 'obli', 'makar'],
             ['beedle', 'gyorg', 'fishman', 'no shield darknut', 'darknut',
-             'wizzrobe', 'orange wizzrobe', 'bokoblin', 'molgera'],
-            ['grandma', 'abe', 'rose', 'zill', 'joel', 'keese', 'magtail',
-             'morth', 'orca', 'sturgeon', 'sue-belle', 'mesa'],
-            ['ilari', 'anton', 'gossack', 'gillian', 'jabun',
-             'queen of fairies', 'fado', 'laruto', 'king of hyrule',
-             'ganondorf', 'great fairy', 'lenzo'],
-            ['mrs. marie', 'doc bandam', 'kamo', 'garrickson', 'killer bees',
-             'salvatore', 'gummy', 'mila\'s father', 'wild pig', 'tott',
-             'old man ho ho', 'traveling merchants'],
+             'orange wizzrobe', 'bokoblin', 'molgera', 'wizzrobe', 'salvatore'],
+            ['grandma', 'abe', 'rose', 'zill', 'joel', 'magtail', 'morth',
+             'orca', 'sturgeon', 'sue-belle', 'mesa', 'ganondorf'],
+            ['mrs. marie', 'killer bees', 'lenzo', 'great fairy',
+             'garrickson', 'ilari', 'gossack', 'anton', 'gillian', 'kamo',
+             'mila\'s father'],
+            ['gummy', 'wild pig', 'tott', 'jabun', 'queen of fairies', 'fado',
+             'laruto', 'king of hyrule', 'loot', 'old man ho ho',
+             'traveling merchants', 'rown'],
             ['hollo', 'irch', 'olivio', 'salvage corp.', 'linder', 'kargaroc',
              'elma', 'drona', 'tingle', 'david jr.', 'ankle', 'knuckle'],
-            ['rown', 'oakin', 'loot', 'aldo', 'seahat', 'boko baba',
-             'deku tree', 'seagull', 'peahat'],
+            ['oakin', 'aldo', 'seahat', 'boko baba', 'deku tree', 'seagull',
+             'peahat'],
         ];
         
         const e = React.createElement;
@@ -604,6 +604,6 @@
         }
         
         const root = ReactDOM.createRoot(document.getElementById('react-root'));
-        root.render(e(Tracker, {}));
+        root.render(e(React.StrictMode, {}, e(Tracker, {})));
     </script>
 </html>
