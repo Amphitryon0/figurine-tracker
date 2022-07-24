@@ -3,11 +3,13 @@
     <meta charset="utf-8">
     <title>Nintendo Gallery Checklist (The Wind Waker HD)</title>
     <style>
+        html { --background: white; background: var(--background); }
+        
         .gallery-room { max-width: max-content; text-align: center; }
         .figurine-row { margin-block: 16px; }
         .figurine { display: inline-block; margin-block: unset; }
         .figurine-img-container { display: inline-block; width: 80px; max-height: 80px; text-align: center; }
-        .figurine img:not(.collected) { filter: opacity(50%); }
+        .figurine img:not(.collected) { filter: opacity(50%) grayscale(50%); }
         .description { color: dimgray; }
         
         @counter-style trips { system: extends decimal; prefix: "Trip "; }
@@ -19,12 +21,19 @@
            Otherwise, don't bother, but make sure this threshold is set very
            reasonably.*/
         #skipped-figurines { position: sticky; bottom: 0; top: max(80px, 2em);
-                             max-height: min(100vh - 6em, 50vh); min-height: max(80px, 2em);
-                             overflow-y: auto; background: white; margin-bottom: 1em; }
-        #skipped-figurines > legend { background: white; }
+                             max-height: min(100vh - 6em, 50vh);
+                             min-height: max(80px, 2em); overflow-y: auto;
+                             background: var(--background); margin-bottom: 1em; }
+        #skipped-figurines > legend { background: var(--background); }
         fieldset > .trip-list { margin-block: 0; }
         
         summary { cursor: pointer; user-select: none; }
+        
+        @media (prefers-color-scheme: dark) {
+            html { --background: #333; color: white; }
+            input[type=checkbox] { filter: invert(20%); }
+            .description { color: darkgray; }
+        }
     </style>
     <div id=react-root></div>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
@@ -368,32 +377,33 @@
         };
         
         const route = [
-            ['minenco', 'sam', 'pompie & vera', 'missy', 'maggie\'s father',
-             'candy', 'kane', 'dampa', 'cannon', 'potova & joanna', 'octorok'],
-            ['mothula', 'kalle demos', 'komali', 'gohma', 'helmaroc king',
-             'tetra', 'miniblin', 'phantom ganon', 'mighty darknut',
-             'puppet ganon', 'zephos & cyclos'],
+            ['sam', 'pompie & vera', 'missy', 'minenco', 'maggie\'s father',
+             'candy', 'kane', 'dampa', 'cannon', 'potova & joanna', 'octorok',
+             'manny'],
+            ['mothula', 'kalle demos', 'komali', 'gohma', 'tetra', 'miniblin',
+             'phantom ganon', 'mighty darknut', 'puppet ganon',
+             'helmaroc king', 'zephos & cyclos', 'carlov'],
             ['maggie', 'mila', 'kreeb', 'bubble', 'armos', 'armos knight',
-             'gohdan', 'valoo', 'linda', 'zunari', 'fairy', 'rat'],
-            ['basht & bisht', 'namali', 'pashli', 'chieftain', 'skett & akoot',
-             'hoskit', 'baito', 'koboli', 'kogoli', 'medli', 'peahat',
-             'seagull'],
+             'gohdan', 'linda', 'zunari', 'rat', 'big octo'],
+            ['basht & bisht', 'namali', 'valoo', 'pashli', 'chieftain',
+             'skett & akoot', 'hoskit', 'baito', 'koboli', 'kogoli', 'medli',
+             'fairy'],
             ['moblin', 'chuchu', 'redead', 'floor master', 'poe',
              'stalfos', 'jalhalla', 'crab', 'willi', 'obli', 'makar'],
-            ['fishman', 'no shield darknut', 'darknut', 'wizzrobe',
-             'orange wizzrobe', 'bokoblin', 'molgera', 'big octo'],
+            ['beedle', 'gyorg', 'fishman', 'no shield darknut', 'darknut',
+             'wizzrobe', 'orange wizzrobe', 'bokoblin', 'molgera'],
             ['grandma', 'abe', 'rose', 'zill', 'joel', 'keese', 'magtail',
              'morth', 'orca', 'sturgeon', 'sue-belle', 'mesa'],
-            ['ilari', 'anton', 'gossack', 'gillian', 'fado', 'laruto', 'jabun',
-             'great fairy', 'queen of fairies', 'ganondorf', 'king of hyrule',
-             'lenzo'],
+            ['ilari', 'anton', 'gossack', 'gillian', 'jabun',
+             'queen of fairies', 'fado', 'laruto', 'king of hyrule',
+             'ganondorf', 'great fairy', 'lenzo'],
             ['mrs. marie', 'doc bandam', 'kamo', 'garrickson', 'killer bees',
              'salvatore', 'gummy', 'mila\'s father', 'wild pig', 'tott',
-             'traveling merchants', 'old man ho ho'],
+             'old man ho ho', 'traveling merchants'],
             ['hollo', 'irch', 'olivio', 'salvage corp.', 'linder', 'kargaroc',
-             'elma', 'drona', 'rown', 'oakin', 'loot', 'aldo'],
-            ['tingle', 'david jr.', 'ankle', 'knuckle', 'gyorg', 'seahat',
-             'beedle', 'boko baba', 'deku tree', 'manny', 'carlov'],
+             'elma', 'drona', 'tingle', 'david jr.', 'ankle', 'knuckle'],
+            ['rown', 'oakin', 'loot', 'aldo', 'seahat', 'boko baba',
+             'deku tree', 'seagull', 'peahat'],
         ];
         
         const e = React.createElement;
